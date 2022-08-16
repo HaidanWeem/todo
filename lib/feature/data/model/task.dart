@@ -8,8 +8,8 @@ Task taskFromJson(String str) {
 }
 
 String taskToJson(Task data) {
-  final dyn = data.toJson();
-  return json.encode(dyn);
+  final res = data.toJson();
+  return json.encode(res);
 }
 
 class Task extends Equatable {
