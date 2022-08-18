@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-Task taskFromJson(String str) {
+Tasks taskFromJson(String str) {
   final jsonData = json.decode(str);
   return Tasks.fromJson(jsonData);
 }
