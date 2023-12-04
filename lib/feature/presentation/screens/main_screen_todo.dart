@@ -3,7 +3,7 @@ import 'package:todo/feature/presentation/widgets/create_task_bottom_sheet.dart'
 import 'package:todo/feature/presentation/widgets/todo_main_widget_body.dart';
 
 class TodoMainScreen extends StatelessWidget {
-  TodoMainScreen({Key? key}) : super(key: key);
+  const TodoMainScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
