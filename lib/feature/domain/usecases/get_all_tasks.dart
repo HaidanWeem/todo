@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:todo/core/error/failure.dart';
 import 'package:todo/feature/data/model/task.dart';
-import 'package:todo/feature/domain/repositories/repositories.dart';
+import 'package:todo/feature/domain/repositories/sql_repository.dart';
 
 class GetAllTasks {
   final SqlRepository sqlRepository;

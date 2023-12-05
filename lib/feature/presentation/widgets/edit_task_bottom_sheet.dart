@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/feature/data/model/task.dart';
-import 'package:todo/feature/presentation/bloc/task_bloc.dart';
-import 'package:todo/feature/presentation/bloc/task_event.dart';
+import 'package:todo/feature/presentation/bloc/task/task_bloc.dart';
+import 'package:todo/feature/presentation/bloc/task/task_event.dart';
 
 void editTask(BuildContext context, Tasks task) {
   TextEditingController titleController = TextEditingController();

@@ -3,9 +3,9 @@ import 'package:todo/feature/data/datasources/local_data_source.dart';
 import 'package:todo/feature/data/model/task.dart';
 import 'package:todo/core/error/failure.dart';
 import 'package:dartz/dartz.dart';
-import 'package:todo/feature/domain/repositories/repositories.dart';
+import 'package:todo/feature/domain/repositories/sql_repository.dart';
 
-class SqlRepositoryImpl extends SqlRepository {
+class SqlRepositoryImpl implements SqlRepository {
   SqlLocalDataSource sqlLocalDataSource;
 
   SqlRepositoryImpl({required this.sqlLocalDataSource});

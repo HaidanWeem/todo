@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/feature/presentation/bloc/task_bloc.dart';
-import 'package:todo/feature/presentation/bloc/task_event.dart';
-import 'package:todo/feature/presentation/bloc/task_state.dart';
+import 'package:todo/feature/presentation/bloc/task/task_bloc.dart';
+import 'package:todo/feature/presentation/bloc/task/task_event.dart';
+import 'package:todo/feature/presentation/bloc/task/task_state.dart';
 import 'package:todo/feature/presentation/widgets/show_details_task.dart';
 import 'package:todo/feature/presentation/widgets/edit_task_bottom_sheet.dart';
 import 'package:todo/feature/presentation/widgets/instruction_widget.dart';

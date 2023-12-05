@@ -8,7 +8,6 @@ abstract class TasksState extends Equatable {
   List<Object?> get props => [];
 }
 
-
 class TasksError extends TasksState {
   final String error;
 
