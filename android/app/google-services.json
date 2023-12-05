@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "660713384265",
+    "project_id": "vzhtodo",
+    "storage_bucket": "vzhtodo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660713384265:android:b4dfb18c2450bee4245298",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxxHFbCwHIi5-UsL4imPAperKccKJrqKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
