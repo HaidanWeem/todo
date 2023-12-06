@@ -11,10 +11,13 @@ class TextFieldLogin extends StatelessWidget {
       textInputAction: TextInputAction.next,
       validator: _validator,
       controller: controller,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         helperText: 'Email format',
         labelText: 'Email',
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: const TextStyle(color: Colors.black),
         enabledBorder: LoginTheme.borderDefault,
         focusedBorder: LoginTheme.borderDefault,
         errorBorder: LoginTheme.borderError,

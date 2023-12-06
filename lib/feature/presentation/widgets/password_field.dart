@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:todo/core/theme/login_theme.dart';
 
@@ -21,6 +20,9 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
       controller: widget.controller,
       obscureText: _isCharachtersHidden,
       decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         helperText: 'Password must be 8 or more characters',
         labelText: 'Password',
         suffixIcon: IconButton(
