@@ -23,10 +23,10 @@ class TasksLoading extends TasksState {
 }
 
 class TasksLoaded extends TasksState {
-  final List<Tasks>? tasks;
+  final List<Tasks> tasks;
 
-  const TasksLoaded({this.tasks});
-  
+  const TasksLoaded({this.tasks = const []});
+
   @override
   List<Object?> get props => [];
 }

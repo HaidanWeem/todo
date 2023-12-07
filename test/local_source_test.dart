@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:todo/core/error/exception.dart';
 import 'package:todo/feature/data/datasources/local_data_source.dart';
@@ -13,7 +14,7 @@ class TasksMock extends Mock implements SqlLocalDataSource {
   ];
 
   @override
-  Future<List<Tasks>?> getAllTasks() async {
+  Future<List<Tasks>> getAllTasks() async {
     try {
       final res = tasksFromDB;
       List<Map<String, Object?>> tasksMap =
@@ -33,7 +34,11 @@ class TasksMock extends Mock implements SqlLocalDataSource {
   }
 
   @override
-  Future<void> createTask(String title, String details) async {
+  Future<void> createTask({
+    required String title,
+    required String details,
+    XFile? image,
+  }) async {
     final result = tasksFromDB.length;
     var count = 0;
     if (result == 0) {
@@ -45,7 +50,6 @@ class TasksMock extends Mock implements SqlLocalDataSource {
     tasksFromDB.add(
         {"id": count, "title": title, "details": details, "checked": false});
   }
-
 }
 
 void main() {
@@ -58,13 +62,13 @@ void main() {
 
     test('get_tasks', () async {
       final tasks = await tasksMock.getAllTasks();
-      expect(tasks!.first.checked, true);
+      expect(tasks.first.checked, true);
     });
 
     test('create_task', () async {
-      await tasksMock.createTask("Task 4", "Details Task 4");
+      await tasksMock.createTask(title: "Task 4", details: "Details Task 4");
       final tasks = await tasksMock.getAllTasks();
-      expect(tasks!.length, 4);
+      expect(tasks.length, 4);
       expect(tasks.last.id, 4);
     });
   });
