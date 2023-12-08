@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,7 +23,7 @@ abstract class SqlLocalDataSource {
 }
 
 class SqlLocalDataSourceImpl implements SqlLocalDataSource {
-  static const _databaseName = 'Tasks3';
+  static const _databaseName = 'Tasks000000000';
   static const databaseTemplate = 'CREATE TABLE $_databaseName ('
       'id INTEGER PRIMARY KEY,'
       'title TEXT,'
@@ -64,9 +65,9 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
   }) async {
     final db = await database;
     final result = await db.rawQuery('SELECT max(id) FROM $_databaseName');
-    final count = Sqflite.firstIntValue(result) ?? 0 + 1;
+    final count = (Sqflite.firstIntValue(result) ?? -1) + 1;
 
-    if (image != null) _uploadImage(image);
+    if (image != null) await _uploadImage(image);
 
     final imageName = image?.name ?? '';
 
@@ -112,7 +113,7 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
 
     if (sqlImageName == imageName || image == null) return;
 
-    _uploadImage(image);
+    await _uploadImage(image);
 
     if (sqlImageName.isEmpty) return;
 
@@ -128,7 +129,7 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
     final db = await database;
     const query =
         'UPDATE $_databaseName SET title = ?, details = ?, image_name = ? WHERE id = ?';
-    await db.rawUpdate(query, [title, details, id, imageName]);
+    await db.rawUpdate(query, [title, details, imageName, id]);
   }
 
   @override
@@ -137,38 +138,34 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
       final db = await database;
       final result = await db.query(_databaseName);
 
+      final imageMap = <String, Uint8List?>{};
+
       for (final task in result) {
-        task['checked'] = task['checked'] == 1;
+        final imageName = task['image_name'];
 
-        final imageName = task['image_name'].toString();
+        if (imageName == null || imageName.toString().isEmpty) continue;
 
-        if (imageName.toString().isEmpty) {
-          task['image_name'] = null;
-
-          continue;
-        }
-
-        final imagePath = await _downloadImage(imageName);
+        final imagePath = await _downloadImage(imageName.toString());
         final response = await http.get(Uri.parse(imagePath));
-        task['image_name'] = response.bodyBytes;
+        imageMap.addAll({task['image_name'].toString(): response.bodyBytes});
       }
 
-      return result.map(Tasks.fromJson).toList();
+      return result.map((e) {
+        final image = imageMap[e['image_name'].toString()];
+
+        return Tasks.fromJson(e, image);
+      }).toList();
     } catch (e) {
       throw CacheException();
     }
   }
 
-  Future<bool> isImageExisted(XFile image) async {
-    bool exists = true;
-    final metadata = await _storage
-        .ref()
-        .child('images/${_auth.currentUser?.uid}/${image.name}')
-        .getMetadata();
+  Future<bool> isImageExisted(String imageName) async {
+    const query = 'SELECT * FROM $_databaseName WHERE image_name = ?';
+    final db = await database;
+    final tasksWithSameImage = await db.rawQuery(query, [imageName]);
 
-    print(metadata);
-
-    return exists;
+    return tasksWithSameImage.isNotEmpty;
   }
 
   Future<void> _deleteUnuseImage(String path) async {
@@ -181,7 +178,7 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
   }
 
   Future<void> _uploadImage(XFile image) async {
-    if (await isImageExisted(image)) return;
+    if (await isImageExisted(image.name)) return;
 
     await _storage
         .ref()

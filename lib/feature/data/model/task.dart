@@ -1,17 +1,6 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-Tasks taskFromJson(String str) {
-  final jsonData = json.decode(str);
-  return Tasks.fromJson(jsonData);
-}
-
-String taskToJson(Tasks data) {
-  final res = data.toJson();
-  return json.encode(res);
-}
 
 class Tasks extends Equatable {
   final int id;
@@ -31,14 +20,14 @@ class Tasks extends Equatable {
   @override
   List<Object?> get props => [id, title, details, checked];
 
-  factory Tasks.fromJson(Map<String, dynamic> json) {
+  factory Tasks.fromJson(Map<String, dynamic> json, Uint8List? image) {
 
     return Tasks(
       id: json['id'],
       title: json['title'],
       details: json['details'],
-      checked: json['checked'],
-      image: json['image_name'],
+      checked: json['checked'] == 1,
+      image: image,
     );
   }
 
