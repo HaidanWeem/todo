@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class TasksEvent extends Equatable {
   const TasksEvent();
@@ -15,8 +16,13 @@ class GetTasks extends TasksEvent {
 class CreateTask extends TasksEvent {
   final String title;
   final String details;
+  final XFile? image;
 
-  const CreateTask({required this.title, required this.details,});
+  const CreateTask({
+    required this.title,
+    required this.details,
+    this.image,
+  });
 
   @override
   List<Object> get props => [];
@@ -25,7 +31,9 @@ class CreateTask extends TasksEvent {
 class EditTask extends TasksEvent {
   final int id;
   final String title, details;
-  const EditTask({required this.title, required this.id, required this.details});
+  final XFile? image;
+  const EditTask(
+      {required this.title, required this.id, required this.details, this.image});
 
   @override
   List<Object> get props => [];

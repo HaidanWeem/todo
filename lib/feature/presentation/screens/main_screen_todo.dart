@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/feature/presentation/bloc/auth/auth_bloc.dart';
+import 'package:todo/feature/presentation/bloc/auth/auth_event.dart';
 import 'package:todo/feature/presentation/widgets/create_task_bottom_sheet.dart';
 import 'package:todo/feature/presentation/widgets/todo_main_widget_body.dart';
+import 'package:todo/todo_navigator.dart';
 
 class TodoMainScreen extends StatelessWidget {
   const TodoMainScreen({Key? key}) : super(key: key);
@@ -10,6 +14,12 @@ class TodoMainScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
+              Navigator.pushReplacementNamed(context, Routes.auth);
+            },
+            icon: const Icon(Icons.logout)),
         backgroundColor: Colors.black,
         title: const Text(
           'TodoApp',

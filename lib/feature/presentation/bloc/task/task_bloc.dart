@@ -32,7 +32,11 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     on<CreateTask>(
       (event, emit) async {
         emit(TasksLoading());
-        await getAllTasks.createTask(event.title, event.details);
+        await getAllTasks.createTask(
+          title: event.title,
+          details: event.details,
+          image: event.image,
+        );
 
         final failureOrTasks = await getAllTasks.getAllTasks();
         failureOrTasks.fold(
@@ -50,8 +54,9 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     on<EditTask>(
       (event, emit) async {
         emit(TasksLoading());
-        await getAllTasks.editTask(event.id, event.title, event.details);
-        
+        await getAllTasks.editTask(
+            event.id, event.title, event.details, event.image);
+
         final failureOrTasks = await getAllTasks.getAllTasks();
         failureOrTasks.fold(
             (failure) => emit(TasksError(error: _mapFailureToMessage(failure))),

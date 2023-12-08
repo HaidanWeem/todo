@@ -48,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           emit(const AuthLoading());
           await _authUsecase.signOut();
-          emit(const AuthLoaded());
+          emit(const Pending());
         } catch (e) {
           emit(AuthError(error: e.toString()));
           emit(const Pending());

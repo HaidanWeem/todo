@@ -6,6 +6,7 @@ import 'package:todo/feature/presentation/bloc/task/task_state.dart';
 import 'package:todo/feature/presentation/widgets/show_details_task.dart';
 import 'package:todo/feature/presentation/widgets/edit_task_bottom_sheet.dart';
 import 'package:todo/feature/presentation/widgets/instruction_widget.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 
 class TodoMainWidget extends StatefulWidget {
   const TodoMainWidget({Key? key}) : super(key: key);
@@ -29,15 +30,17 @@ class _TodoMainWidgetState extends State<TodoMainWidget> {
             style: const TextStyle(color: Colors.white, fontSize: 25),
           );
         } else if (state is TasksLoaded) {
-          if (state.tasks!.isEmpty) {
+          if (state.tasks.isEmpty) {
             return const InstructionWidget();
           }
           return SafeArea(
             child: ListView.builder(
-              itemCount: state.tasks!.length,
+              itemCount: state.tasks.length,
               itemBuilder: (context, index) {
-                final task = state.tasks![index];
+                final task = state.tasks[index];
+                final image = task.image;
                 bool checked = task.checked;
+
                 return Dismissible(
                   background: Container(color: Colors.red),
                   key: Key(task.id.toString()),
@@ -45,7 +48,7 @@ class _TodoMainWidgetState extends State<TodoMainWidget> {
                     BlocProvider.of<TasksBloc>(context)
                         .add(DeleteTask(id: task.id));
                     setState(() {
-                      state.tasks!.removeAt(index);
+                      state.tasks.removeAt(index);
                     });
                   },
                   child: ListTile(
@@ -56,6 +59,19 @@ class _TodoMainWidgetState extends State<TodoMainWidget> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    leading: image == null
+                        ? null
+                        : InstaImageViewer(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                minWidth: 44,
+                                minHeight: 44,
+                                maxWidth: 64,
+                                maxHeight: 64,
+                              ),
+                              child: Image.memory(image, fit: BoxFit.cover),
+                            ),
+                          ),
                     subtitle: Text(
                       task.details,
                       maxLines: 1,

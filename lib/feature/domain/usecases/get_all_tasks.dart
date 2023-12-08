@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:todo/core/error/failure.dart';
 import 'package:todo/feature/data/model/task.dart';
 import 'package:todo/feature/domain/repositories/sql_repository.dart';
@@ -8,16 +9,24 @@ class GetAllTasks {
 
   GetAllTasks(this.sqlRepository);
 
-  Future<Either<Failure, List<Tasks>?>> getAllTasks() async {
+  Future<Either<Failure, List<Tasks>>> getAllTasks() async {
     return await sqlRepository.getAllTasks();
   }
 
-  Future<void> createTask(String title, String details) async {
-    return await sqlRepository.createTask(title, details);
+  Future<void> createTask({
+    required String title,
+    required String details,
+    required XFile? image,
+  }) async {
+    return await sqlRepository.createTask(
+      title: title,
+      details: details,
+      image: image,
+    );
   }
 
-  Future<void> editTask(int id, String title, String details) async {
-    return await sqlRepository.editTask(id, title, details);
+  Future<void> editTask(int id, String title, String details, XFile? image) async {
+    return await sqlRepository.editTask(id, title, details, image);
   }
 
   Future<void> deleteTask(int id) async {
