@@ -100,8 +100,6 @@ class _BottomTaskManagerState extends State<BottomTaskManager> {
                       backgroundColor: MaterialStateProperty.all(Colors.black),
                     ),
                     onPressed: () {
-                      print('bottom task');
-                      print(_image?.path);
                       widget.onConfirm(
                         titleController.text,
                         detailsController.text,

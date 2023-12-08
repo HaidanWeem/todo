@@ -25,7 +25,7 @@ class TasksMock extends Mock implements SqlLocalDataSource {
         } else if (task['checked'] == 1) {
           task['checked'] = true;
         }
-        return Tasks.fromJson(task);
+        return Tasks.fromJson(task, null);
       }).toList();
       return listTasks;
     } catch (e) {

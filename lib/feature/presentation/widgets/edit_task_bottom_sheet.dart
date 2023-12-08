@@ -16,7 +16,6 @@ void editTask(BuildContext context, Tasks task) {
       detailsInitial: task.details,
       imageInitial: task.image,
       onConfirm: (title, details, file) {
-        print(file?.path);
         context.read<TasksBloc>().add(EditTask(
               id: task.id,
               title: title,
