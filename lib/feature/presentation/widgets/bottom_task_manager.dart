@@ -1,20 +1,22 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo/feature/presentation/widgets/image_picker.dart';
+import 'package:todo/feature/presentation/widgets/todo_date_range_picker.dart';
 
 class BottomTaskManager extends StatefulWidget {
   final String? titleInitial;
   final String? detailsInitial;
   final Uint8List? imageInitial;
+  final DateTimeRange? initialRange;
   final String header;
-  final Function(String, String, XFile?) onConfirm;
+  final Function(String, String, XFile?, DateTimeRange) onConfirm;
   final VoidCallback? onCancel;
 
   const BottomTaskManager({
     required this.header,
     required this.onConfirm,
+    this.initialRange,
     this.titleInitial,
     this.detailsInitial,
     this.imageInitial,
@@ -27,16 +29,20 @@ class BottomTaskManager extends StatefulWidget {
 }
 
 class _BottomTaskManagerState extends State<BottomTaskManager> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController detailsController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _detailsController = TextEditingController();
   XFile? _image;
+  DateTimeRange _selectedRange = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
 
   @override
   void initState() {
     super.initState();
-    titleController.text = widget.titleInitial ?? '';
-    detailsController.text = widget.detailsInitial ?? '';
-
+    _titleController.text = widget.titleInitial ?? '';
+    _detailsController.text = widget.detailsInitial ?? '';
+    _selectedRange = widget.initialRange ?? _selectedRange;
     final initialImage = widget.imageInitial;
     if (initialImage == null) return;
     _image = XFile.fromData(initialImage);
@@ -61,7 +67,7 @@ class _BottomTaskManagerState extends State<BottomTaskManager> {
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: TextField(
                 maxLength: 100,
-                controller: titleController,
+                controller: _titleController,
                 decoration: InputDecoration(
                   hintText: 'Title',
                   border: OutlineInputBorder(
@@ -71,7 +77,7 @@ class _BottomTaskManagerState extends State<BottomTaskManager> {
               ),
             ),
             TextField(
-              controller: detailsController,
+              controller: _detailsController,
               decoration: InputDecoration(
                 hintText: 'Text of your Task',
                 border: OutlineInputBorder(
@@ -81,34 +87,44 @@ class _BottomTaskManagerState extends State<BottomTaskManager> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              child: Column(
                 children: [
-                  ImagePickerButton(
-                      imageInitial: _image, onChanged: (img) => _image = img),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () =>
-                        widget.onCancel ?? Navigator.of(context).pop(),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.black),
-                    ),
-                    onPressed: () {
-                      widget.onConfirm(
-                        titleController.text,
-                        detailsController.text,
-                        _image,
-                      );
-                      titleController.clear();
-                      detailsController.clear();
-                    },
-                    child: Text(widget.header),
+                  TodoDateRangePickerWidget(
+                    initialRange: widget.initialRange,
+                      onConfirm: (range) => _selectedRange = range),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ImagePickerButton(
+                          imageInitial: _image,
+                          onChanged: (img) => _image = img),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () =>
+                            widget.onCancel ?? Navigator.of(context).pop(),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                        ),
+                        onPressed: () {
+                          widget.onConfirm(
+                            _titleController.text,
+                            _detailsController.text,
+                            _image,
+                            _selectedRange,
+                          );
+                          _titleController.clear();
+                          _detailsController.clear();
+                        },
+                        child: Text(widget.header),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -9,8 +9,17 @@ abstract class SqlRepository {
     required String title,
     required String details,
     required XFile? image,
+    required DateTime start,
+    required DateTime end,
   });
-  Future<void> editTask(int id, String title, String details, XFile? image);
+  Future<void> editTask(
+    int id,
+    String title,
+    String details,
+    XFile? image,
+    DateTime start,
+    DateTime end,
+  );
   Future<void> deleteTask(int id);
   Future<void> checkTask(int id, bool checked);
 }

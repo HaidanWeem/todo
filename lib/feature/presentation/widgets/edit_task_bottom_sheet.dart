@@ -15,12 +15,14 @@ void editTask(BuildContext context, Tasks task) {
       titleInitial: task.title,
       detailsInitial: task.details,
       imageInitial: task.image,
-      onConfirm: (title, details, file) {
+      initialRange: DateTimeRange(start: task.start, end: task.end),
+      onConfirm: (title, details, file, dateRange) {
         context.read<TasksBloc>().add(EditTask(
               id: task.id,
               title: title,
               details: details,
               image: file,
+              range: dateRange,
             ));
         Navigator.of(context).pop();
       },

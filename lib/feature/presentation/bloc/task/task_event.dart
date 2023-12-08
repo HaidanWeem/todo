@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class TasksEvent extends Equatable {
@@ -16,11 +17,13 @@ class GetTasks extends TasksEvent {
 class CreateTask extends TasksEvent {
   final String title;
   final String details;
+  final DateTimeRange range;
   final XFile? image;
 
   const CreateTask({
     required this.title,
     required this.details,
+    required this.range,
     this.image,
   });
 
@@ -31,9 +34,14 @@ class CreateTask extends TasksEvent {
 class EditTask extends TasksEvent {
   final int id;
   final String title, details;
+  final DateTimeRange range;
   final XFile? image;
   const EditTask(
-      {required this.title, required this.id, required this.details, this.image});
+      {required this.title,
+      required this.id,
+      required this.details,
+      required this.range,
+      this.image});
 
   @override
   List<Object> get props => [];

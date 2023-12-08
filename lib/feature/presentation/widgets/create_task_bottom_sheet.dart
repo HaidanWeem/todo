@@ -11,11 +11,12 @@ void addTask(BuildContext context) {
     builder: (context) => SingleChildScrollView(
       child: BottomTaskManager(
         header: 'Create task',
-        onConfirm: (title, details, file) {
+        onConfirm: (title, details, file, dateRange) {
           context.read<TasksBloc>().add(CreateTask(
                 title: title,
                 details: details,
                 image: file,
+                range: dateRange,
               ));
           Navigator.of(context).pop();
         },

@@ -36,6 +36,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
           title: event.title,
           details: event.details,
           image: event.image,
+          range: event.range,
         );
 
         final failureOrTasks = await getAllTasks.getAllTasks();
@@ -55,7 +56,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       (event, emit) async {
         emit(TasksLoading());
         await getAllTasks.editTask(
-            event.id, event.title, event.details, event.image);
+          event.id,
+          event.title,
+          event.details,
+          event.image,
+          event.range,
+        );
 
         final failureOrTasks = await getAllTasks.getAllTasks();
         failureOrTasks.fold(

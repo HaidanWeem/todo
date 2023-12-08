@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -15,25 +16,37 @@ abstract class SqlLocalDataSource {
   Future<void> createTask({
     required String title,
     required String details,
+    required DateTime start,
+    required DateTime end,
     XFile? image,
   });
-  Future<void> editTask(int id, String title, String details, XFile? image);
+  Future<void> editTask(
+    int id,
+    String title,
+    String details,
+    XFile? image,
+    DateTime start,
+    DateTime end,
+  );
   Future<void> deleteTask(int id);
   Future<void> checkTask(int id, bool checked);
 }
 
 class SqlLocalDataSourceImpl implements SqlLocalDataSource {
-  static const _databaseName = 'Tasks000000000';
+  static const _databaseName = 'Tasks0000000000';
   static const databaseTemplate = 'CREATE TABLE $_databaseName ('
       'id INTEGER PRIMARY KEY,'
       'title TEXT,'
       'details TEXT,'
       'checked BIT,'
-      'image_name TEXT'
+      'image_name TEXT,'
+      'start_date TEXT,'
+      'end_date TEXT'
       ')';
 
   final _storage = FirebaseStorage.instance;
   final _auth = FirebaseAuth.instance;
+  static const _formatter = ['yyyy', '-', 'mm', '-', 'dd'];
 
   Database? _database;
 
@@ -61,6 +74,8 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
   Future<void> createTask({
     required String title,
     required String details,
+    required DateTime start,
+    required DateTime end,
     XFile? image,
   }) async {
     final db = await database;
@@ -71,10 +86,22 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
 
     final imageName = image?.name ?? '';
 
+    final formattedStart = formatDate(start, _formatter);
+    final formattedEnd = formatDate(end, _formatter);
+
     await db.rawInsert(
-      "INSERT Into $_databaseName (id, title, details, checked, image_name)"
-      "VALUES (?, ?, ?, ?, ?)",
-      [count, title, details, 0, imageName],
+      "INSERT Into $_databaseName"
+      "(id, title, details, checked, image_name, start_date, end_date)"
+      "VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [
+        count,
+        title,
+        details,
+        0,
+        imageName,
+        formattedStart,
+        formattedEnd,
+      ],
     );
   }
 
@@ -92,13 +119,21 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
 
   @override
   Future<void> editTask(
-      int id, String title, String details, XFile? image) async {
+    int id,
+    String title,
+    String details,
+    XFile? image,
+    DateTime start,
+    DateTime end,
+  ) async {
     await checkEdittedImage(id, image);
     await updateTask(
       id: id,
       title: title,
       details: details,
       imageName: image?.path.split('/').last,
+      start: start,
+      end: end,
     );
   }
 
@@ -124,12 +159,26 @@ class SqlLocalDataSourceImpl implements SqlLocalDataSource {
     required int id,
     required String title,
     required String details,
+    required DateTime start,
+    required DateTime end,
     String? imageName = '',
   }) async {
+    final formattedStart = formatDate(start, _formatter);
+    final formattedEnd = formatDate(end, _formatter);
     final db = await database;
     const query =
-        'UPDATE $_databaseName SET title = ?, details = ?, image_name = ? WHERE id = ?';
-    await db.rawUpdate(query, [title, details, imageName, id]);
+        'UPDATE $_databaseName SET title = ?, details = ?, image_name = ?, start_date = ?, end_date = ? WHERE id = ?';
+    await db.rawUpdate(
+      query,
+      [
+        title,
+        details,
+        imageName,
+        formattedStart,
+        formattedEnd,
+        id,
+      ],
+    );
   }
 
   @override

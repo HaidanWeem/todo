@@ -21,11 +21,15 @@ class SqlRepositoryImpl implements SqlRepository {
     required String title,
     required String details,
     required XFile? image,
+    required DateTime start,
+    required DateTime end,
   }) async {
     await sqlLocalDataSource.createTask(
       title: title,
       details: details,
       image: image,
+      start: start,
+      end: end,
     );
   }
 
@@ -35,8 +39,22 @@ class SqlRepositoryImpl implements SqlRepository {
   }
 
   @override
-  Future<void> editTask(int id, String title, String details, XFile? image) async {
-    await sqlLocalDataSource.editTask(id, title, details, image);
+  Future<void> editTask(
+    int id,
+    String title,
+    String details,
+    XFile? image,
+    DateTime start,
+    DateTime end,
+  ) async {
+    await sqlLocalDataSource.editTask(
+      id,
+      title,
+      details,
+      image,
+      start,
+      end,
+    );
   }
 
   @override
