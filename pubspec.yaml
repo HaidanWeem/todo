@@ -28,6 +28,9 @@ dependencies:
   image_picker: ^1.0.4
   firebase_storage: ^11.5.3
   insta_image_viewer: ^1.0.2
+  table_calendar: ^3.0.8
+  flutter_date_range_picker: ^0.0.5
+  date_format: ^2.0.7
 
 
 

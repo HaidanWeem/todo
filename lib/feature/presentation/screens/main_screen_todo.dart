@@ -14,16 +14,30 @@ class TodoMainScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
+                Navigator.pushReplacementNamed(context, Routes.auth);
+              },
+              icon: const Icon(Icons.logout)),
+        ],
         leading: IconButton(
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
-              Navigator.pushReplacementNamed(context, Routes.auth);
-            },
-            icon: const Icon(Icons.logout)),
+            onPressed: () => Navigator.pushNamed(
+                  context,
+                  Routes.calendar,
+                ),
+            icon: const Icon(
+              Icons.calendar_month,
+              color: Colors.white,
+            )),
         backgroundColor: Colors.black,
         title: const Text(
-          'TodoApp',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'VzhTodo',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
