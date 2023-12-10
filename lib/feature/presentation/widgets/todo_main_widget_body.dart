@@ -41,6 +41,7 @@ class _TodoMainWidgetState extends State<TodoMainWidget> {
                 final image = task.image;
                 bool checked = task.checked;
 
+
                 return Dismissible(
                   background: Container(color: Colors.red),
                   key: Key(task.id.toString()),
